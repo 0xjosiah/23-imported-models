@@ -28,17 +28,25 @@ dracoLoader.setDecoderPath('/draco/') // the draco loader is only used when a dr
 const gltfLoader = new GLTFLoader()
 gltfLoader.setDRACOLoader(dracoLoader)
 
+let mixer;
+
 gltfLoader.load(
     // '/models/FlightHelmet/glTF/FlightHelmet.glTF',
     // '/models/Duck/glTF-Draco/Duck.glTF',
     '/models/Fox/glTF/Fox.glTF',
     (glTF) => {
-        // console.log('model load success');
+        // console.log(glTF, 'model load success');
         // this is useful for loading only elements you nee
         // const children = [...glTF.scene.children]
         // for(const child of children) {
         //     scene.add(child)
         // }
+        mixer = new THREE.AnimationMixer(glTF.scene)
+        const action = mixer.clipAction(glTF.animations[0])
+        console.log(action);
+        action.play()
+
+        glTF.scene.scale.set(.025, .025, .025)
         scene.add(glTF.scene)
     },
     // () => {
@@ -139,6 +147,9 @@ const tick = () =>
     const elapsedTime = clock.getElapsedTime()
     const deltaTime = elapsedTime - previousTime
     previousTime = elapsedTime
+
+    // Update mixer
+    if(mixer) mixer.update(deltaTime)
 
     // Update controls
     controls.update()
