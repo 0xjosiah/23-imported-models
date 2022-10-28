@@ -3,6 +3,8 @@ import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import * as dat from 'lil-gui'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
+import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader'
+
 
 /**
  * Base
@@ -20,23 +22,31 @@ const scene = new THREE.Scene()
  * Models
  */
 // model loader
+const dracoLoader = new DRACOLoader()
+dracoLoader.setDecoderPath('/draco/') // the draco loader is only used when a draco file needs decoding, can add without worry of performance
+
 const gltfLoader = new GLTFLoader()
+gltfLoader.setDRACOLoader(dracoLoader)
 
 gltfLoader.load(
-    '/models/FlightHelmet/glTF/FlightHelmet.glTF',
+    // '/models/FlightHelmet/glTF/FlightHelmet.glTF',
+    // '/models/Duck/glTF-Draco/Duck.glTF',
+    '/models/Fox/glTF/Fox.glTF',
     (glTF) => {
-        console.log('model load success');
-        const children = [...glTF.scene.children]
-        for(const child of children) {
-            scene.add(child)
-        }
+        // console.log('model load success');
+        // this is useful for loading only elements you nee
+        // const children = [...glTF.scene.children]
+        // for(const child of children) {
+        //     scene.add(child)
+        // }
+        scene.add(glTF.scene)
     },
-    () => {
-        console.log('model load progress');
-    },
-    () => {
-        console.log('model load error');
-    }
+    // () => {
+    //     console.log('model load progress');
+    // },
+    // () => {
+    //     console.log('model load error');
+    // }
 )
 
 /**
